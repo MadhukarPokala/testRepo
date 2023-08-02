@@ -1,0 +1,428 @@
+openapi: 3.0.1
+servers:
+- url: /ledger
+  description: Default Server URL
+paths:
+  /v1/transaction/update-transaction-status:
+    put:
+      tags:
+      - ledger-entry-controller
+      operationId: updateTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLedgerTransactionStatusDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction:
+    post:
+      tags:
+      - ledger-entry-controller
+      operationId: createTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLedgerTransactionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/create:
+    post:
+      tags:
+      - ledger-controller
+      operationId: createLedger
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLedgerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/{transaction-id}:
+    get:
+      tags:
+      - ledger-entry-controller
+      operationId: getLedgerEntriesByTxId
+      parameters:
+      - name: transaction-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/customer-profile/transactions:
+    get:
+      tags:
+      - customer-profile-controller
+      operationId: getCustomerProfileTransactions
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerDetails
+      parameters:
+      - name: ledger-ids
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedger
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+      - ledger-controller
+      operationId: deleteLedger
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}/transactions:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerTransactions
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          default: desc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}/snapshots:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerSnapshots
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: page-token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: reverse-page-token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: from-timestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: to-timestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          default: DESC
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/ledgers:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgers
+      parameters:
+      - name: profile-id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: profile-type
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+components:
+  schemas:
+    UpdateLedgerTransactionStatusDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+          enum:
+          - UNKNOWN
+          - CREATED
+          - PENDING
+          - PENDING_SETTLEMENT
+          - SETTLED
+          - REVERT
+          - REVERT_SPLIT
+          - REVERT_UPDATE
+          - REVERT_MERGE
+          - UNRECOGNIZED
+    Any:
+      type: object
+      properties:
+        typeUrl:
+          type: string
+        value:
+          $ref: '#/components/schemas/ByteString'
+    ApiResponse:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/ApiResponseHeader'
+        data:
+          $ref: '#/components/schemas/Any'
+        pageToken:
+          type: string
+        hasMorePages:
+          type: boolean
+        reversePageToken:
+          type: string
+        hasMoreReversePages:
+          type: boolean
+    ApiResponseHeader:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        message:
+          type: string
+        traceId:
+          type: string
+    ByteString:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        validUtf8:
+          type: boolean
+    CreateLedgerTransactionDTO:
+      type: object
+      properties:
+        fromLedgerId:
+          type: string
+        toLedgerId:
+          type: string
+        units:
+          type: number
+          format: double
+        sourceRatePerUnit:
+          type: number
+          format: double
+        destinationRatePerUnit:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+          - UNKNOWN
+          - CREATED
+          - PENDING
+          - PENDING_SETTLEMENT
+          - SETTLED
+          - REVERT
+          - REVERT_SPLIT
+          - REVERT_UPDATE
+          - REVERT_MERGE
+          - UNRECOGNIZED
+        externalTransactionId:
+          type: string
+        referenceData:
+          type: string
+        acquireAvailableBalance:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    CreateLedgerDTO:
+      type: object
+      properties:
+        profileId:
+          type: string
+        profileType:
+          type: string
+        holdingType:
+          type: string
+        initialUnits:
+          type: number
+          format: double
+        initialAvgSourceRatePerUnit:
+          type: number
+          format: double
+        initialAvgDestinationRatePerUnit:
+          type: number
+          format: double
+        canBeNegative:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true

@@ -1,0 +1,1669 @@
+openapi: 3.0.1
+servers:
+- url: /banking
+  description: Default Server URL
+tags:
+- name: Beneficiary API's
+  description: APIs related to beneficiaries
+paths:
+  /v1/transaction/update:
+    put:
+      tags:
+      - transaction-controller
+      operationId: updateTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/close:
+    put:
+      tags:
+      - transaction-controller
+      operationId: closeTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloseTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/cancel:
+    put:
+      tags:
+      - transaction-controller
+      operationId: cancelTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getBankAccount
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+      - bank-account-controller
+      operationId: updateBankAccount
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBankAccountDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/settle:
+    post:
+      tags:
+      - transaction-controller
+      operationId: settleTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettleTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/refund:
+    post:
+      tags:
+      - transaction-controller
+      operationId: initiateRefund
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/initiate:
+    post:
+      tags:
+      - transaction-controller
+      operationId: initiateTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/beneficiary:
+    post:
+      tags:
+      - transaction-controller
+      operationId: payBeneficiary
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryTransactionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/end-customer-profile:
+    post:
+      tags:
+      - end-customer-profile-controller
+      operationId: onboardEndCustomerProfile
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndCustomerProfileOnboardRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/beneficiary:
+    post:
+      tags:
+      - Beneficiary API's
+      summary: An API to create a beneficiary with the required details
+      operationId: createBeneficiary
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryResponseDTO'
+  /v1/beneficiary/platform:
+    post:
+      tags:
+      - Beneficiary API's
+      operationId: createPlatformBeneficiary
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}/attach-card:
+    post:
+      tags:
+      - bank-account-controller
+      operationId: attachCard
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachCardRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/platform:
+    post:
+      tags:
+      - bank-account-controller
+      operationId: createPlatformBankAccount
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformBankAccountRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/end-customer-profile:
+    post:
+      tags:
+      - bank-account-controller
+      operationId: createEndCustomerProfileBankAccount
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndCustomerProfileBankAccountRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/customer-profile:
+    post:
+      tags:
+      - bank-account-controller
+      operationId: createCustomerProfileBankAccount
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerProfileBankAccountRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/{transaction-id}:
+    get:
+      tags:
+      - transaction-controller
+      operationId: getTransaction
+      parameters:
+      - name: transaction-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/providers:
+    get:
+      tags:
+      - provider-controller
+      operationId: getProviders
+      parameters:
+      - name: region
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/providers/{provider-id}/rails:
+    get:
+      tags:
+      - provider-controller
+      operationId: getSupportedRailsByProvider
+      parameters:
+      - name: provider-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/providers/{provider-id}/bank-details:
+    get:
+      tags:
+      - provider-controller
+      operationId: getBankNames
+      parameters:
+      - name: provider-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/providers/{provider-id}/account-types:
+    get:
+      tags:
+      - provider-controller
+      operationId: getAccountTypesByProvider
+      parameters:
+      - name: provider-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/providers/{provider-id}/account-types/corporate:
+    get:
+      tags:
+      - provider-controller
+      operationId: getCorporatesAccountTypesByProvider
+      parameters:
+      - name: provider-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/end-customer-profile/{end-customer-profile-id}:
+    get:
+      tags:
+      - end-customer-profile-controller
+      operationId: getEndCustomerProfile
+      parameters:
+      - name: end-customer-profile-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+      - end-customer-profile-controller
+      operationId: deleteEndCustomerProfile
+      parameters:
+      - name: end-customer-profile-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider-id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/end-customer-profile/{end-customer-profile-id}/accounts:
+    get:
+      tags:
+      - end-customer-profile-controller
+      operationId: getEndCustomerBankAccounts
+      parameters:
+      - name: end-customer-profile-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider-id
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/customer-profile:
+    get:
+      tags:
+      - customer-profile-controller
+      operationId: getCustomerProfile
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/customer-profile/accounts:
+    get:
+      tags:
+      - customer-profile-controller
+      operationId: getCustomerProfileBankAccounts
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: provider-id
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/beneficiary/{beneficiary-id}:
+    get:
+      tags:
+      - Beneficiary API's
+      operationId: getBeneficiary
+      parameters:
+      - name: beneficiary-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+      - Beneficiary API's
+      operationId: deleteBeneficiary
+      parameters:
+      - name: beneficiary-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}/transactions:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getAccountTransactions
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start-time
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: end-time
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: page-token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: -1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}/details:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getBankAccount_1
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}/beneficiaries:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getAllBeneficiaries
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{account-id}/balance:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getBankAccountBalance
+      parameters:
+      - name: account-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/account-number/{account-number}/details:
+    get:
+      tags:
+      - bank-account-controller
+      operationId: getBankAccountByAccountNumber
+      parameters:
+      - name: account-number
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider-id
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+components:
+  schemas:
+    UpdateTransactionRequestDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        amount:
+          type: number
+          format: double
+        negativeTransferAllowed:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    Any:
+      type: object
+      properties:
+        typeUrl:
+          type: string
+        value:
+          $ref: '#/components/schemas/ByteString'
+    ApiResponse:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/ApiResponseHeader'
+        data:
+          $ref: '#/components/schemas/Any'
+        pageToken:
+          type: string
+        hasMorePages:
+          type: boolean
+        reversePageToken:
+          type: string
+        hasMoreReversePages:
+          type: boolean
+    ApiResponseHeader:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        message:
+          type: string
+        traceId:
+          type: string
+    ByteString:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        validUtf8:
+          type: boolean
+    CloseTransactionRequestDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        purpose:
+          type: string
+    CancelTransactionRequestDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        purpose:
+          type: string
+    UpdateBankAccountDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        negativeBalanceAllowed:
+          type: boolean
+    SettleTransactionRequestDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        amount:
+          type: number
+          format: double
+        transactionRail:
+          type: string
+        negativeTransferAllowed:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        treasuryAccountId:
+          type: string
+        purpose:
+          type: string
+    RefundRequestDTO:
+      type: object
+      properties:
+        originalTransactionId:
+          type: string
+        refundAmount:
+          type: number
+          format: double
+        purpose:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    InitiateTransactionRequestDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        beneficiaryId:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+        purpose:
+          type: string
+        negTransferAllowed:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        subTxnType:
+          type: string
+          enum:
+          - CARD_TXN
+          - BENEFICIARY_TRANSFER
+          - REFUND
+          - EXTERNAL
+          - TREASURY_RECOVERY_TRANSFER
+          - TREASURY_LENT_TRANSFER
+          - MANUAL
+          - UNRECOGNIZED
+    BeneficiaryTransactionRequestDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        beneficiaryId:
+          type: string
+        amount:
+          type: number
+          format: double
+        purpose:
+          type: string
+        transactionRail:
+          type: string
+        negativeTransferAllowed:
+          type: boolean
+        treasuryAccountId:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+    EndCustomerProfileOnboardRequestDTO:
+      type: object
+      properties:
+        endCustomerProfileId:
+          type: string
+        providerId:
+          type: array
+          properties:
+            underlyingElements:
+              type: array
+              items:
+                type: object
+            empty:
+              type: boolean
+          items:
+            type: string
+    Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        addressLine3:
+          type: string
+        addressLine4:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        countryCode:
+          type: string
+        localCode:
+          type: string
+    BankCodeDetailsDTO:
+      type: object
+      properties:
+        sgBankCodeDetails:
+          $ref: '#/components/schemas/SGBank'
+    BeneficiaryBankAccountDetailsDTO:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+        bankName:
+          type: string
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+        country:
+          type: string
+          enum:
+          - COUNTRY_UNKNOWN
+          - SGP
+          - UNRECOGNIZED
+        bankCodeDetails:
+          $ref: '#/components/schemas/BankCodeDetailsDTO'
+    BeneficiaryRequestDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        beneficiaryName:
+          type: string
+        beneficiaryAccountDetails:
+          $ref: '#/components/schemas/BeneficiaryBankAccountDetailsDTO'
+        address:
+          $ref: '#/components/schemas/Address'
+        beneficiaryEmail:
+          type: string
+        isHidden:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+        negativeSourceAccountBalAllowed:
+          type: boolean
+        treasuryAccountId:
+          type: string
+    SGBank:
+      type: object
+      properties:
+        swiftBic:
+          type: string
+        iban:
+          type: string
+    BeneficiaryResponseDTO:
+      type: object
+      properties:
+        beneficiaryId:
+          type: string
+        beneficiaryStatus:
+          type: string
+          enum:
+          - BENEFICIARY_INITIATED
+          - BENEFICIARY_PENDING
+          - BENEFICIARY_ACTIVE
+          - BENEFICIARY_INACTIVE
+          - BENEFICIARY_FAILED
+          - BENEFICIARY_CREATED
+          - BENEFICIARY_PROVIDER_INITIATED
+          - UNRECOGNIZED
+        beneficiaryErrorDetails:
+          $ref: '#/components/schemas/ErrorDetailsDTO'
+    ErrorDetailsDTO:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    AttachCardRequestDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+        negativeBalanceAllowed:
+          type: boolean
+    PlatformBankAccountRequestDTO:
+      type: object
+      properties:
+        profileId:
+          type: string
+        profileType:
+          type: string
+        region:
+          type: string
+          enum:
+          - REGION_UNKNOWN
+          - SG
+          - UNRECOGNIZED
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+        onBehalfOf:
+          type: string
+          enum:
+          - CUSTOMER
+          - CARD
+          - INVESTMENT
+          - CUSTOMER_AND_CARD
+          - UNRECOGNIZED
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    EndCustomerProfileBankAccountRequestDTO:
+      type: object
+      properties:
+        endCustomerProfileId:
+          type: string
+        providerId:
+          type: string
+        accountTypeId:
+          type: string
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+        country:
+          type: string
+          enum:
+          - COUNTRY_UNKNOWN
+          - SGP
+          - UNRECOGNIZED
+        toBeInTrust:
+          type: boolean
+        negativeBalanceAllowed:
+          type: boolean
+        onBehalfOf:
+          type: string
+          enum:
+          - CUSTOMER
+          - CARD
+          - INVESTMENT
+          - CUSTOMER_AND_CARD
+          - UNRECOGNIZED
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    CustomerProfileBankAccountRequestDTO:
+      type: object
+      properties:
+        customerProfileId:
+          type: string
+        providerId:
+          type: string
+        accountTypeId:
+          type: string
+        currency:
+          type: string
+          enum:
+          - CURRENCY_UNKNOWN
+          - SGD
+          - UNRECOGNIZED
+        country:
+          type: string
+          enum:
+          - COUNTRY_UNKNOWN
+          - SGP
+          - UNRECOGNIZED
+        toBeInTrust:
+          type: boolean
+        negativeBalanceAllowed:
+          type: boolean
+        onBehalfOf:
+          type: string
+          enum:
+          - CUSTOMER
+          - CARD
+          - INVESTMENT
+          - CUSTOMER_AND_CARD
+          - UNRECOGNIZED
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+openapi: 3.0.1
+servers:
+- url: /ledger
+  description: Default Server URL
+paths:
+  /v1/transaction/update-transaction-status:
+    put:
+      tags:
+      - ledger-entry-controller
+      operationId: updateTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLedgerTransactionStatusDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction:
+    post:
+      tags:
+      - ledger-entry-controller
+      operationId: createTransaction
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-idempotency-key
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLedgerTransactionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/create:
+    post:
+      tags:
+      - ledger-controller
+      operationId: createLedger
+      parameters:
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLedgerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/transaction/{transaction-id}:
+    get:
+      tags:
+      - ledger-entry-controller
+      operationId: getLedgerEntriesByTxId
+      parameters:
+      - name: transaction-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/customer-profile/transactions:
+    get:
+      tags:
+      - customer-profile-controller
+      operationId: getCustomerProfileTransactions
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerDetails
+      parameters:
+      - name: ledger-ids
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedger
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+      - ledger-controller
+      operationId: deleteLedger
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}/transactions:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerTransactions
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: page_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          default: desc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/{ledger-id}/snapshots:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgerSnapshots
+      parameters:
+      - name: ledger-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: x-customer-profile-id
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: page-token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: reverse-page-token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: from-timestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: to-timestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ""
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          default: DESC
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /v1/account/ledgers:
+    get:
+      tags:
+      - ledger-controller
+      operationId: getLedgers
+      parameters:
+      - name: profile-id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: profile-type
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+components:
+  schemas:
+    UpdateLedgerTransactionStatusDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+          enum:
+          - UNKNOWN
+          - CREATED
+          - PENDING
+          - PENDING_SETTLEMENT
+          - SETTLED
+          - REVERT
+          - REVERT_SPLIT
+          - REVERT_UPDATE
+          - REVERT_MERGE
+          - UNRECOGNIZED
+    Any:
+      type: object
+      properties:
+        typeUrl:
+          type: string
+        value:
+          $ref: '#/components/schemas/ByteString'
+    ApiResponse:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/ApiResponseHeader'
+        data:
+          $ref: '#/components/schemas/Any'
+        pageToken:
+          type: string
+        hasMorePages:
+          type: boolean
+        reversePageToken:
+          type: string
+        hasMoreReversePages:
+          type: boolean
+    ApiResponseHeader:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        message:
+          type: string
+        traceId:
+          type: string
+    ByteString:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        validUtf8:
+          type: boolean
+    CreateLedgerTransactionDTO:
+      type: object
+      properties:
+        fromLedgerId:
+          type: string
+        toLedgerId:
+          type: string
+        units:
+          type: number
+          format: double
+        sourceRatePerUnit:
+          type: number
+          format: double
+        destinationRatePerUnit:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+          - UNKNOWN
+          - CREATED
+          - PENDING
+          - PENDING_SETTLEMENT
+          - SETTLED
+          - REVERT
+          - REVERT_SPLIT
+          - REVERT_UPDATE
+          - REVERT_MERGE
+          - UNRECOGNIZED
+        externalTransactionId:
+          type: string
+        referenceData:
+          type: string
+        acquireAvailableBalance:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
+    CreateLedgerDTO:
+      type: object
+      properties:
+        profileId:
+          type: string
+        profileType:
+          type: string
+        holdingType:
+          type: string
+        initialUnits:
+          type: number
+          format: double
+        initialAvgSourceRatePerUnit:
+          type: number
+          format: double
+        initialAvgDestinationRatePerUnit:
+          type: number
+          format: double
+        canBeNegative:
+          type: boolean
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          deprecated: true
